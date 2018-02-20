@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Chat UI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Raleway'>
+<link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css'>
+
+      <link rel="stylesheet" href="src/index.css">
+
+    <style>
+        * {
+  font-family: 'Raleway', sans-serif;
+}
+html, body{
+  height:100%;
+}
+
+.chat-log {
+  width: 100%;
+  max-width: 600px;
+  height: 90%;
+  border: 1px solid #f7f7f7;
+}
+
+.log {
+  height: calc(100% - 50px);
+  overflow-y: auto;
+}
+
+.input {
+    background-color: #F7F7F7;
+    height: 50px;
+
+}
+
+.user-input {
+    color: #B4B7BF;
+    background-color: transparent;
+    width: calc(100% - 90px);
+    border: 0px;
+    font-size: 1.1em;
+    line-height: 50px;
+    margin-left: 20px;
+    outline: none;
+
+}
+
+button {
+    color: #B4B7BF;
+    background-color: transparent;
+    border: 0px;
+    width: 60px;
+    padding: 14px;
+    outline: none;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.message {
+  margin: 20px;
+  font-size: 1em;
+  opacity: 0;
+  float: left;
+  clear: both;
+}
+
+.message.user {
+  float: right;
+  clear: both;
+}
+
+.message img {
+    width: 50px;
+    float: left;
+}
+
+.content {
+    background: #8DABE3;
+    color: #ffffff;
+    padding: 15px;
+    border-radius: 5px;
+
+    float: left;
+    margin-left: 15px;
+    max-width: calc(100% - 100px);
+}
+
+.user .content {
+  color: #868995;
+  background: #f7f7f7;
+  max-width: none;
+}
+
+
+.credit {
+  margin-top: 20px;
+}
+
+
+    </style>
+
+
+</head>
+
+<body>
+  <div class="chat-log">
+  <div class="log">
+  </div>
+  <div class="input">
+    <form>
+      <input type="text" class="user-input" placeholder="message..."/>
+      <button>
+        <i class="fa fa-paper-plane fa-2x" aria-hidden="true"></i>
+      </button>
+    </form>
+  </div>
+</div>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js'></script>
+
+    <script>
+      var robotImageUrl = 'https://s3-us-west-2.amazonaws.com/chrisnielsen/robot.png';
+// Cartoon vector designed by Freepik
+// http://www.freepik.com/free-photos-vectors/cartoon
+
+// Pre-load image
+$('<img/>')[0].src = robotImageUrl;
+
+
+$('form').submit(function (event) {
+  event.preventDefault();
+
+  var $userInput = $(this).find('input');
+  var message = $userInput.val();
+
+  var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "http://localhost:8000/api/interaction",
+  "method": "POST",
+  "mode": "no-cors",
+  "crossDomain" : "true",
+  "headers": {
+
+    "content-type": "text/html",
+    "content-type": "application/json",
+    "cache-control": "no-cache",
+    'Access-Control-Allow-Origin': '*'
+    // "postman-token": "2d8aac14-e7d4-e674-7122-639305bf19a6"
+  },
+  "data": '{"msg":" '+ message +' "}'
+      // "data": "{\"msg\":\"Hello\"}"
+}
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+  addToLog(response,false)
+});
+
+
+
+  if (!_.isEmpty(message)) {
+    addToLog(message, true);
+    // sendMessgeToServer(message);
+  }
+
+  $userInput.val('');
+});
+
+
+
+function sendMessgeToServer(message) {
+    setTimeout(function () {
+      addToLog(message, false);
+    }, 2000);
+}
+
+function addToLog(message, user) {
+  var $message = $('<div class="message animated"></div>');
+
+  if (!user) {
+    var $picture = $('<img src="' + robotImageUrl + '"></img>');
+    $message.append($picture);
+  }
+
+  var $content = $('<div class="content"></div>');
+  $content.html(message);
+  $message.append($content);
+
+  var $log = $('.log');
+  $log.append($message);
+
+  if (user) {
+    $message.addClass('user');
+  }
+
+  $log.animate({ scrollTop: $log[0].scrollHeight }, "slow", 'linear');
+
+  setTimeout(function () {
+    if (user) {
+      $message.addClass('user');
+      $message.addClass('fadeInRightBig');
+    } else {
+      $message.addClass('fadeInLeftBig');
+    }
+  }, 0);
+}
+    </script>
+
+</body>
+</html>

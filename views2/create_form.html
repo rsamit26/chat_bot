@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Form</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="jumbotron ">
+    <h1 class="text-center">Create Feedback Form</h1>
+  </div>
+
+<div class="container">
+<div class="container-data">
+  <div class="row">
+   <div class="col-sm-4"></div>
+   <div class="col-sm-4 form-name-field">
+    Form Name : <input id="form-name-val" type="text" name="form_name" ><br><br>
+    Selected questions id : <input id="question-id-list-val" type="text" name="question_id_list" ><br><br>
+    <span id="create_question" class="btn btn-info">Create</span>
+   </div>
+  </div>
+</div>
+    <br><br>
+
+<div class="container">
+  <h2>Question</h2>
+  <p>List of questions with details</p>
+  <div class="table-responsive">
+  <table class="table table-bordered table-hover" id="question-data">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Question</th>
+        <th>Answer Type</th>
+        <th>Question Tags</th>
+        <th>Predefined Answer</th>
+        <th>Boolean Value</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+  </div>
+</div>
+</div>
+
+
+<script type="text/javascript">
+$( document ).ready(function() {
+
+var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "http://localhost:8000/api/ad_vq",
+    "method": "GET",
+    "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "content-type": "application/json",
+        "cache-control": "no-cache"
+    }
+}
+
+$.ajax(settings).done(function (response) {
+
+//  console.log(response);
+
+  var rows = "";
+$.each(response, function(){
+    rows += "<tr id='row-data' class='row-value'>" +
+        "<td id='question_id_value'>" + this.question_id + "</td>" +
+        "<td>" + this.question + "</td>" +
+        "<td>" + this.answer_type + "</td>" +
+        "<td>" + this.question_tag + "</td>" +
+        "<td>" + this.predefined_answer + "</td>" +
+        "<td>" + this.boolean_value + "</td>" +
+//        "<td><span> Select </span></td>" +
+        "</tr>";
+});
+
+$( rows ).appendTo( "#question-data tbody" );
+
+});
+
+var arry_ = [];
+
+$(document).on('click', '.row-value', function() {
+
+    var new_entry = this.children[0].innerHTML
+    arry_.push(new_entry)
+    arry_ = $.unique(arry_);
+    $("#question-id-list-val").val(arry_.sort());
+});
+
+//================================================
+//    Create form with question Ids selected
+
+$("#create_question").click(function() {
+    form_name = $("#form-name-val").val();
+    form_question_ids = $("#question-id-list-val").val();
+
+var settings2 = {
+  "async": true,
+  "crossDomain": true,
+  "url": "http://127.0.0.1:8000/api/ad_cf",
+  "method": "POST",
+  "headers": {
+    "content-type": "application/json",
+    "cache-control": "no-cache"
+  },
+  "processData": false,
+  "data": '{"form_questions_id":"' + form_question_ids + '","form_name":"' + form_name + '" } '
+}
+
+$.ajax(settings2).done(function (response) {
+//  console.log(response);
+    alert(response.message);
+}).fail(function(){
+alert('something went wrong, please try again later');
+    });
+
+});
+});
+
+//================================================
+    </script>
+
+</body>
+</html>

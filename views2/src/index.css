@@ -1,0 +1,88 @@
+* {
+  font-family: 'Raleway', sans-serif;
+}
+html, body{
+  height:100%;
+}
+
+.chat-log {
+  width: 100%;
+  max-width: 600px;
+  height: 90%;
+  border: 1px solid #f7f7f7;
+}
+
+.log {
+  height: calc(100% - 50px);
+  overflow-y: auto;
+}
+
+.input {
+    background-color: #F7F7F7;
+    height: 50px;
+
+}
+
+.user-input {
+    color: #B4B7BF;
+    background-color: transparent;
+    width: calc(100% - 90px);
+    border: 0px;
+    font-size: 1.1em;
+    line-height: 50px;
+    margin-left: 20px;
+    outline: none;
+
+}
+
+button {
+    color: #B4B7BF;
+    background-color: transparent;
+    border: 0px;
+    width: 60px;
+    padding: 14px;
+    outline: none;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.message {
+  margin: 20px;
+  font-size: 1em;
+  opacity: 0;
+  float: left;
+  clear: both;
+}
+
+.message.user {
+  float: right;
+  clear: both;
+}
+
+.message img {
+    width: 50px;
+    float: left;
+}
+
+.content {
+    background: #8DABE3;
+    color: #ffffff;
+    padding: 15px;
+    border-radius: 5px;
+
+    float: left;
+    margin-left: 15px;
+    max-width: calc(100% - 100px);
+}
+
+
+.user .content {
+  color: #868995;
+  background: #f7f7f7;
+  max-width: none;
+}
+
+
+.credit {
+  margin-top: 20px;
+}
